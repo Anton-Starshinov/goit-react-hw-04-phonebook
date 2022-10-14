@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Form from './Form/Form';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
@@ -6,7 +6,9 @@ import { nanoid } from 'nanoid';
 import { Container, TitlePhoneBook } from './App.styled';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(window.localStorage.getItem('contacts')) ?? '';
+  });
   const [filter, setFilter] = useState('');
 
   const formSubmitHandler = ({ name, number }) => {
@@ -36,6 +38,10 @@ export const App = () => {
   const deleteContact = id => {
     setContacts(contacts.filter(contact => contact.id !== id));
   };
+
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   return (
     <Container>
