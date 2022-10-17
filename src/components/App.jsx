@@ -7,9 +7,13 @@ import { Container, TitlePhoneBook } from './App.styled';
 
 export const App = () => {
   const [contacts, setContacts] = useState(() => {
-    return JSON.parse(window.localStorage.getItem('contacts')) ?? '';
+    return JSON.parse(window.localStorage.getItem('contacts')) ?? [];
   });
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const formSubmitHandler = ({ name, number }) => {
     const addContact = { id: nanoid(3), name, number };
@@ -24,7 +28,7 @@ export const App = () => {
   };
 
   const cheageFilter = evt => {
-    setFilter({ filter: evt.currentTarget.value });
+    setFilter(evt.currentTarget.value);
   };
 
   const getVisibleContacts = () => {
@@ -38,10 +42,6 @@ export const App = () => {
   const deleteContact = id => {
     setContacts(contacts.filter(contact => contact.id !== id));
   };
-
-  useEffect(() => {
-    window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
 
   return (
     <Container>
